@@ -1,8 +1,15 @@
 #include "SDL.h"
+#include "Network/networkinterface.h"
+
 
 
 int main(int argc, char *argv[])
 {
+    network::init();
+    const char* str = "This is a test blah blah blah message message message";
+    network::send(10, str);
+
+
     //SDL test code - to be removed
     SDL_Window *win = NULL;
     SDL_Renderer *renderer = NULL;
