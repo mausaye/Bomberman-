@@ -7,10 +7,9 @@ int main(int argc, char *argv[])
 {
     network::init();
     const char* str = "This is a test blah blah blah message message message";
-    network::send(10, str);
+    network::send(10, "This is a testing message");
 
-
-    //SDL test code - to be removed
+    //SDL test code - to be removed later on.
     SDL_Window *win = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Texture *bitmapTex = NULL;
@@ -31,12 +30,16 @@ int main(int argc, char *argv[])
     while (!loopShouldStop)
     {
         SDL_Event event;
+        if (!(network::q.empty())) {
+            std::cout << network::q.pop() << std::endl;
+        }
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
             {
                 case SDL_QUIT:
                     loopShouldStop = SDL_TRUE;
+                    network::stop();
                     break;
             }
         }
