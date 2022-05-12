@@ -2,11 +2,16 @@
 #include <boost/bind.hpp>
 #include <iostream>
 #include <queue>
-#include "../Utils/ThreadSafeQueue.hpp"
+#include "../../Utils/ThreadSafeQueue.hpp"
+#include "../Message.h"
 
 #ifndef BOMBERMAN2_0_NETWORKINTERFACE_H
 #define BOMBERMAN2_0_NETWORKINTERFACE_H
-namespace network {
+//TODO: Add header, make some stuff effectively hidden.
+namespace ClientSideNetworking {
+    //buffer shared between networking thread and main thread
+    ThreadSafeQueue<std::string> unread_messages;
+
     //port of particular client to send and receive stuff.
     const int MY_PORT = 7258;
 
@@ -18,8 +23,6 @@ namespace network {
     //thread that handles the constant receiving.
     std::thread networking_thread;
 
-    //buffer shared between networking thread and main thread
-    ThreadSafeQueue<std::string> q;
 
     //service for both sending and receiving sockets
     boost::asio::io_service io_service;
@@ -30,13 +33,14 @@ namespace network {
     //structure for incoming messages.
     struct Receiver {
     public:
-        Receiver(boost::asio::io_service& io_service)
+        explicit Receiver(boost::asio::io_service& io_service)
                 : recv_socket(io_service, boost::asio::ip::udp::endpoint(
                 boost::asio::ip::udp::v4(), MY_PORT)
         )
         {
             startReceive();
         }
+
     private:
         void startReceive() {
             recv_socket.async_receive_from(
@@ -62,7 +66,7 @@ namespace network {
             for (int i = 0; i < bytes_transferred; i++) {
                 s.push_back(buffer[i]);
             }
-            q.push(s);
+            unread_messages.push(s);
         }
 
 
@@ -72,11 +76,12 @@ namespace network {
 
         boost::asio::ip::udp::socket recv_socket;
         boost::asio::ip::udp::endpoint server_endpoint;
-        std::array<char, 1024> buffer;
+        std::array<char, 1024> buffer{};
     };
 
     //send to server
     void send(int id, const char* msg) {
+        Message m;
         size_t len = strlen(msg);
         send_socket.open(boost::asio::ip::udp::v4());
         send_socket.send_to(boost::asio::buffer(msg, len), dest);
@@ -99,9 +104,6 @@ namespace network {
         io_service.stop();
         networking_thread.join();
     }
-
-
-
 }
 
 #endif //BOMBERMAN2_0_NETWORKINTERFACE_H
