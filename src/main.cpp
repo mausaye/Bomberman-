@@ -1,9 +1,15 @@
 #include "SDL.h"
+#include "Network/client/networkinterface.h"
+
 
 
 int main(int argc, char *argv[])
 {
-    //SDL test code - to be removed
+    ClientSideNetworking::init();
+    const char* str = "This is a test blah blah blah message message message";
+    ClientSideNetworking::send(10, "This is a testing message");
+
+    //SDL test code - to be removed later on.
     SDL_Window *win = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Texture *bitmapTex = NULL;
@@ -24,12 +30,16 @@ int main(int argc, char *argv[])
     while (!loopShouldStop)
     {
         SDL_Event event;
+        if (!(ClientSideNetworking::unread_messages.empty())) {
+            std::cout << ClientSideNetworking::unread_messages.pop() << std::endl;
+        }
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
             {
                 case SDL_QUIT:
                     loopShouldStop = SDL_TRUE;
+                    ClientSideNetworking::stop();
                     break;
             }
         }
