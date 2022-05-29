@@ -3,7 +3,7 @@
 #include <iostream>
 #include <queue>
 #include "../../Utils/ThreadSafeQueue.hpp"
-#include "../Message.h"
+#include "../Messages/Message.h"
 
 #ifndef BOMBERMAN2_0_NETWORKINTERFACE_H
 #define BOMBERMAN2_0_NETWORKINTERFACE_H
@@ -79,9 +79,12 @@ namespace ClientSideNetworking {
         std::array<char, 1024> buffer{};
     };
 
+    //Message decode(std::string encoded_message) {
+
+    //}
+
     //send to server
     void send(int id, const char* msg) {
-        Message m;
         size_t len = strlen(msg);
         send_socket.open(boost::asio::ip::udp::v4());
         send_socket.send_to(boost::asio::buffer(msg, len), dest);

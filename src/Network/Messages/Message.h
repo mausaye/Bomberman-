@@ -15,11 +15,14 @@
 
 class Message {
 public:
+    Message();
     virtual ~Message() {};
+    virtual std::string encode() = 0;
     std::string get_string_representation();
+
     
 private:
-    std::string string_representation;
+    std::string string_representation = "MESSAGE NEVER ENCODED";
 };
 
 
