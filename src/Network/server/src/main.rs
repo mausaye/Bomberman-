@@ -12,7 +12,7 @@ fn main() -> std::io::Result<()> {
                     thread::spawn(move || {
                         println!("Handling connection from {}", &src);
                         let buf = &mut buf[..amt];
-                        for (x )  in buf {
+                        for (x)  in buf {
                             print!("{}", *x as char);
                         }
                         println!();

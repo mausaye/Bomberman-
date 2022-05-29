@@ -6,7 +6,6 @@
 int main(int argc, char *argv[])
 {
     ClientSideNetworking::init();
-    const char* str = "This is a test blah blah blah message message message";
     ClientSideNetworking::send(10, "This is a testing message");
 
     //SDL test code - to be removed later on.
