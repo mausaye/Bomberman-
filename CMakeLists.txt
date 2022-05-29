@@ -10,5 +10,5 @@ FIND_PACKAGE( Boost 1.40 COMPONENTS program_options REQUIRED )
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(Bomberman2_0
-        src/main.cpp src/Network/server/network.h src/Network/client/networkinterface.h src/Utils/ThreadSafeQueue.hpp src/Network/Message.cpp src/Network/Message.h)
+        src/main.cpp src/Network/client/networkinterface.h src/Utils/ThreadSafeQueue.hpp src/Network/Messages/Message.cpp src/Network/Messages/Message.h)
 target_link_libraries(Bomberman2_0 ${SDL2_LIBRARIES}  ${Boost_LIBRARIES} )
